@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "artist")
-public  abstract class artist {
+public  abstract class Artist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,6 +14,14 @@ public  abstract class artist {
 
     private String Name;
 
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
 
     public Integer getId() {
         return id;
