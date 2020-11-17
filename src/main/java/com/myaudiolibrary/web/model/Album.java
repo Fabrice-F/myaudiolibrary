@@ -1,4 +1,4 @@
-package model;
+package com.myaudiolibrary.web.model;
 
 
 import javax.persistence.*;

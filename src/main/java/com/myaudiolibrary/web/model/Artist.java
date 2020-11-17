@@ -1,4 +1,6 @@
-package model;
+package com.myaudiolibrary.web.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -13,11 +15,12 @@ public  abstract class Artist {
     @Column(name = "ArtistId")
     private Integer id;
 
+    @JsonIgnoreProperties("artist")
     @OneToMany(mappedBy = "artist")
     private Set<Album> albums;
 
 
-    private String Name;
+    private String name;
 
 
     public Set<Album> getAlbums() {
@@ -29,11 +32,11 @@ public  abstract class Artist {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public Integer getId() {
