@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "album")
-public abstract class Album {
+public class Album {
 
     @Id
     @Column(name = "AlbumId")
