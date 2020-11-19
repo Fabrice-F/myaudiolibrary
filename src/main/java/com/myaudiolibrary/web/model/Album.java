@@ -9,11 +9,11 @@ public class Album {
 
     @Id
     @Column(name = "AlbumId")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ArtistId")
     private Artist artist;
 

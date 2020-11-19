@@ -11,12 +11,12 @@ import java.util.Set;
 public class Artist {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ArtistId")
     private Integer id;
 
     @JsonIgnoreProperties("artist")
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist" ,  cascade = CascadeType.REMOVE )
     private Set<Album> albums;
 
 
