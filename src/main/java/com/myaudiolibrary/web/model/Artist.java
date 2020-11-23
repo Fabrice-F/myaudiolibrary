@@ -19,7 +19,6 @@ public class Artist {
     @OneToMany(mappedBy = "artist" ,  cascade = CascadeType.REMOVE )
     private Set<Album> albums;
 
-
     private String name;
 
 

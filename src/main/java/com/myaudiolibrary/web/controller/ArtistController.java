@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -41,37 +42,42 @@ public class ArtistController {
     @RequestMapping(params = {"name"},method = RequestMethod.GET ,produces = "application/json")
     public Page<Artist> searchArtistByName(
             @RequestParam("name") String name,
-            @RequestParam("page") Integer page,
+            @RequestParam(value="page") Integer page,
             @RequestParam("size") Integer size,
-            @RequestParam(value = "sortProperty") String sortProperty,
+            @RequestParam(value = "sortProperty" , defaultValue = "name") String sortProperty,
             @RequestParam(value = "sortDirection" ) Sort.Direction sortDirection
     )
     {
-        //TODO: SI NAME EXISTE OU PAS VIDE
+        //SI NAME EXISTE OU PAS VIDE : ne renvoi pas d'erreur
+
         if (size<10|| size>50)
             throw new IllegalArgumentException("L'argument size n'est pas situé entre les bornes 10 et 50");
-        // TODO: TRAITEMENT PAGE <1
-        // TODO: TRAITEMENT SI INTEGER RECOIT UN UN AUTRE TYPE
-        // TODO: TRAITEMENT SI SORT DIRECTION INVALIDE
-        // TODO: TRAITEMENT SI SORT PROPERTY NON RENSEIGNER OU INCORRECT ( valeur par défaut)
+
+        if (page<0)
+            throw new IllegalArgumentException("Le numéro de la page est incorrect");
+
+        //Si SORT DIRECTION à une mauvaise valeur MethodArgumentTypeMismatchException levée
+
+        //TODO: VOIR SI NORMAL ERREUR CONSOLE  EN CAS DE PAGE A -1
         PageRequest pageRequest = PageRequest.of(page,size,sortDirection,sortProperty);
         return artistRepository.findAllByNameIgnoreCaseContaining(name,pageRequest);
     }
 
     @RequestMapping( method = RequestMethod.GET,produces = "application/json")
     public Page<Artist> searchAllArtistWithPagination(
-            @RequestParam("page") Integer page,
+            @RequestParam(value="page") Integer page,
             @RequestParam("size") Integer size,
-            @RequestParam(value = "sortProperty") String value,
+            @RequestParam(value = "sortProperty" ,defaultValue = "name") String value,
             @RequestParam(value = "sortDirection" ) Sort.Direction sortDirection
     ){
+
         if (size<10|| size>50)
             throw new IllegalArgumentException("L'argument size n'est pas situé entre les bornes 10 et 50");
-        // TODO: TRAITEMENT PAGE <1
-        // TODO: TRAITEMENT SI INTEGER RECOIT UN UN AUTRE TYPE
-        // TODO: TRAITEMENT SI SORT DIRECTION INVALIDE
-        // TODO: TRAITEMENT SI SORT PROPERTY NON RENSEIGNER OU INCORRECT ( valeur par défaut)
 
+        if (page<0)
+            throw new IllegalArgumentException("Le numéro de la page est incorrect");
+
+        //Si SORT DIRECTION à une mauvaise valeur MethodArgumentTypeMismatchException levée
 
         PageRequest pageRequest = PageRequest.of(page,size,sortDirection,value);
         return artistRepository.findAll(pageRequest);
