@@ -6,15 +6,13 @@ import com.myaudiolibrary.web.model.Artist;
 import com.myaudiolibrary.web.repository.AlbumRepository;
 import com.myaudiolibrary.web.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -56,9 +54,9 @@ public class ArtistController {
         if (page<0)
             throw new IllegalArgumentException("Le numéro de la page est incorrect");
 
-        //Si SORT DIRECTION à une mauvaise valeur MethodArgumentTypeMismatchException levée
+        //Si sortDirection à une mauvaise valeur MethodArgumentTypeMismatchException levée
 
-        //TODO: VOIR SI NORMAL ERREUR CONSOLE  EN CAS DE PAGE A -1
+        //TODO: VOIR SI NORMAL ERREUR CONSOLE EN CAS DE PAGE A -1
         PageRequest pageRequest = PageRequest.of(page,size,sortDirection,sortProperty);
         return artistRepository.findAllByNameIgnoreCaseContaining(name,pageRequest);
     }
@@ -77,7 +75,7 @@ public class ArtistController {
         if (page<0)
             throw new IllegalArgumentException("Le numéro de la page est incorrect");
 
-        //Si SORT DIRECTION à une mauvaise valeur MethodArgumentTypeMismatchException levée
+        //Si sortDirection à une mauvaise valeur MethodArgumentTypeMismatchException levée
 
         PageRequest pageRequest = PageRequest.of(page,size,sortDirection,value);
         return artistRepository.findAll(pageRequest);
@@ -88,8 +86,15 @@ public class ArtistController {
     public Artist createArtist(@RequestBody Artist artist)
     {
         // TODO: TRAITEMENT SI ARTISTE N'EST PAS NULL
-        // TODO: TRAITEMENT SI ARTISTE EXISTE DEJA
         // TODO: TRAITEMENT SI MANQUE DES INFORMATIONS A ARTISTE (voir required décorateur)
+
+        if(artist==null)
+            throw new IllegalArgumentException("L'artiste n'as pas été renseigné");
+
+
+        if(artistRepository.existsByNameIgnoreCase(artist.getName()))
+            throw new EntityExistsException("L'artiste que vous souhaitez ajouté existe déjà");
+
         Artist result =  artistRepository.save(artist);
         return result;
     }
