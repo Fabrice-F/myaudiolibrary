@@ -32,8 +32,13 @@ public class ArtistController {
     public Optional<Artist> searchArtistById(@PathVariable(value = "id") Integer id){
 
         Optional<Artist> optionalArtist = artistRepository.findById(id);
+
+
+
         if (optionalArtist.isEmpty())
             throw new EntityNotFoundException("L'artiste avec l'id " + id + " n'as pas été trouvé ");
+
+
         return artistRepository.findById(id);
     }
 
@@ -85,15 +90,13 @@ public class ArtistController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public Artist createArtist(@RequestBody Artist artist)
     {
-        // TODO: TRAITEMENT SI ARTISTE N'EST PAS NULL
-        // TODO: TRAITEMENT SI MANQUE DES INFORMATIONS A ARTISTE (voir required décorateur)
 
-        if(artist==null)
-            throw new IllegalArgumentException("L'artiste n'as pas été renseigné");
-
+        if(artist.getName().isEmpty() || artist.getName().isBlank())
+            throw new IllegalArgumentException("Le nom de l'artiste n'est pas renseigné");
 
         if(artistRepository.existsByNameIgnoreCase(artist.getName()))
             throw new EntityExistsException("L'artiste que vous souhaitez ajouté existe déjà");
+
 
         Artist result =  artistRepository.save(artist);
         return result;
@@ -103,10 +106,9 @@ public class ArtistController {
     public Artist updateArtist(@PathVariable Integer id,@RequestBody Artist artist)
     {
 
-        // TODO: TRAITEMENT SI ID EST SUPERIEUR A 0 ET SI BONNE CONVERSION
-        // TODO: TRAITEMENT SI ARTIST EXISTE
-        // TODO: TRAITEMENT SI ARTIST N'EST PAS VIDE
-        // TODO: TRAITEMENT SI MANQUE DES INFORMATIONS A ARTISTE (voir required décorateur)
+        if(artist.getName().isEmpty() || artist.getName().isBlank())
+            throw new IllegalArgumentException("Le nom de l'artiste n'est pas renseigné");
+
         Artist result =  artistRepository.save(artist);
         return result;
     }
@@ -115,10 +117,17 @@ public class ArtistController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteArtiste(@PathVariable("id") Integer id)
     {
-        // TODO: TRAITEMENT SI ID EST SUPERIEUR A 0 ET SI BONNE CONVERSION
-        // TODO: TRAITEMENT SI ARTIST EXISTE
-        Artist artist = artistRepository.findById(id).get();
-        artistRepository.delete(artist);
+        //Traitement erreur convertion id grace à MethodArgumentTypeMismatchException dans globalException
+
+        if (id<1)
+            throw new IllegalArgumentException("L'id de l'artiste doit être égal ou supérieur à 1" );
+
+        Optional<Artist> artist = artistRepository.findById(id);
+
+        if(artist.isEmpty())
+            throw new EntityNotFoundException("L'artist avec l'id " + id + " n'as pas été trouvé");
+
+        artistRepository.delete(artist.get());
     }
 
 }

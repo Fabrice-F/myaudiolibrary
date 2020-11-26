@@ -5,6 +5,8 @@ import com.sun.istack.NotNull;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 
