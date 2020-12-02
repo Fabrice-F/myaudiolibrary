@@ -11,6 +11,7 @@ import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -59,6 +60,7 @@ public class ArtistController {
         if (page<0)
             throw new IllegalArgumentException("Le numéro de la page est incorrect");
 
+
         //Si sortDirection à une mauvaise valeur MethodArgumentTypeMismatchException levée
 
         //TODO: VOIR SI NORMAL ERREUR CONSOLE EN CAS DE PAGE A -1
@@ -97,6 +99,10 @@ public class ArtistController {
         if(artistRepository.existsByNameIgnoreCase(artist.getName()))
             throw new EntityExistsException("L'artiste que vous souhaitez ajouté existe déjà");
 
+        // ne sachant pas si on autorisait les artists avec seulement des chiffres j'ai crée l'exception mais n'esyt
+        // pas implémenté , a décommenté si on veut y mettre en place.
+//        if (isNumeric(artist.getName()))
+//            throw new IllegalArgumentException("Le nom de l'artiste ne contient que des nombres");
 
         Artist result =  artistRepository.save(artist);
         return result;
@@ -130,4 +136,8 @@ public class ArtistController {
         artistRepository.delete(artist.get());
     }
 
+
+    private static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+    }
 }

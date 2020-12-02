@@ -25,9 +25,9 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleMethodArgumentTypeMismatchExeption( MethodArgumentTypeMismatchException e){
-        return "Le paramètre '" + e.getName() + "' a une valeur incorrecte :" + e.getValue() ;
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected String handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return "Le type du paramètre " + ex.getName() + " est incorrect pour la valeur '" + ex.getValue() + "'";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -66,11 +66,11 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleEntityExistsException(NullPointerException e) {
-        return "Une valeur null à été entrée sur une propriété";
-    }
+//    @ExceptionHandler(NullPointerException.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public String handleEntityExistsException(NullPointerException e) {
+//        return "Une valeur null à été entrée sur une propriété";
+//    }
 
 
 
